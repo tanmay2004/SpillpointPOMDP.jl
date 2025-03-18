@@ -17,5 +17,5 @@ random_policy(b, i, observations, s) = begin
 	end
 end
 
-simulate_and_save(pomdp, random_policy, s0, belief, nothing, "results/random_rollout_example", false)
+simulate_and_save(pomdp, random_policy, s0, nothing, nothing, "results/random_rollout_example", false)
 

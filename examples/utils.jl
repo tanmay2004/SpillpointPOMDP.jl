@@ -3,6 +3,8 @@ using POMDPs
 using POMDPTools
 using Plots
 
+max_steps = 50
+
 function simulate_and_save(pomdp, policy_fn, s0, b0, up, dir, update_belief=true, use_plot=true)
 	try mkdir(dir) catch end # Make the directory 
 	
