@@ -16,7 +16,7 @@ Nstates = 10
 max_steps = 50
 Ntrials = 1
 
-optmisitic_val_estimate(pomdp, s, args...) = 0.1*pomdp.trapped_reward*(trap_capacity(s.m, s.sr, lb=s.v_trapped, ub=0.3, rel_tol=1e-2, abs_tol=1e-3) - s.v_trapped)
+optimistic_val_estimate(pomdp, s, args...) = 0.1*pomdp.trapped_reward*(trap_capacity(s.m, s.sr, lb=s.v_trapped, ub=0.3, rel_tol=1e-2, abs_tol=1e-3) - s.v_trapped)
 
 
 Random.seed!(0)
@@ -120,7 +120,7 @@ for trial in 1:Ntrials
 				up = BootstrapFilter(pomdp, 1)
 				b = ParticleCollection([sguess])
 
-				solver = MCTSSolver(n_iterations=tree_queries, depth=20, exploration_constant=exploration_coefficient, estimate_value=optmisitic_val_estimate)
+				solver = MCTSSolver(n_iterations=tree_queries, depth=20, exploration_constant=exploration_coefficient, estimate_value=optimistic_val_estimate)
 				planner = solve(solver, pomdp)
 
 				no_uncertainty_policy(b, i, observations, args...) = begin
@@ -179,13 +179,13 @@ for trial in 1:Ntrials
 
 				simulate_and_save(pomdp, fixed_schedule_policy, s0, b0, up, dir, true, USE_PLOT)
 			elseif solver_type == :POMCPOW_basic
-				solver = POMCPOWSolver(;tree_queries, criterion=MaxUCB(exploration_coefficient), tree_in_info=false, estimate_value=optmisitic_val_estimate, k_observation, alpha_observation)
+				solver = POMCPOWSolver(;tree_queries, criterion=MaxUCB(exploration_coefficient), tree_in_info=false, estimate_value=optimistic_val_estimate, k_observation, alpha_observation)
 				planner = solve(solver, pomdp)
 				up = BootstrapFilter(pomdp, 2000)
 				b0 = initialize_belief(up, initialstate(pomdp))
 				simulate_and_save(pomdp, (b, args...) -> action(planner, b), s0, b0, up, dir, true)
 			elseif solver_type == :POMCPOW_SIR
-				solver = POMCPOWSolver(;tree_queries, criterion=MaxUCB(exploration_coefficient), tree_in_info=false, estimate_value=optmisitic_val_estimate, k_observation, alpha_observation)
+				solver = POMCPOWSolver(;tree_queries, criterion=MaxUCB(exploration_coefficient), tree_in_info=false, estimate_value=optimistic_val_estimate, k_observation, alpha_observation)
 				planner = solve(solver, pomdp)
 				up = SpillpointPOMDP.SIRParticleFilter(
 					model=pomdp, 

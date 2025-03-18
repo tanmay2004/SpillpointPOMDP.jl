@@ -31,8 +31,8 @@ pomdp = SpillpointInjectionPOMDP(;exited_reward_amount, exited_reward_binary, ob
 # pomdp = SpillpointInjectionPOMDP(exited_reward_binary=-1000)
 
 # Setup and run the solver
-optmisitic_val_estimate(pomdp, s, h, steps) = 0.5*pomdp.trapped_reward*(trap_capacity(s.m, s.sr, lb=s.v_trapped, ub=0.3, rel_tol=1e-2, abs_tol=1e-3) - s.v_trapped)
-solver = POMCPOWSolver(;tree_queries, criterion=MaxUCB(exploration_coefficient), tree_in_info=true, estimate_value=optmisitic_val_estimate, k_observation, alpha_observation)
+optimistic_val_estimate(pomdp, s, h, steps) = 0.5*pomdp.trapped_reward*(trap_capacity(s.m, s.sr, lb=s.v_trapped, ub=0.3, rel_tol=1e-2, abs_tol=1e-3) - s.v_trapped)
+solver = POMCPOWSolver(;tree_queries, criterion=MaxUCB(exploration_coefficient), tree_in_info=true, estimate_value=optimistic_val_estimate, k_observation, alpha_observation)
 planner = solve(solver, pomdp)
 
 s0 = deepcopy(initial_states[1])
